@@ -1,47 +1,39 @@
 import express from 'express'
 import { type Handler } from 'vite-plugin-mix'
-import { Todo } from '../lib'
+import { NewGameData } from '../lib'
 import { env } from './env'
 import Game from './game'
-import OSM from './osm'
-const osm = new OSM()
+import Inrix from './inrix'
 
-// Notice how SECRET, from `.env` is loaded like this.
-console.log(`Secret: ${env.SECRET}, hostname: ${env.HOSTNAME}`)
-
+const games: { [id: string]: Game } = {}
+const inrix = new Inrix(env.APPID, env.HASHTOKEN)
 const app = express()
 
-app.get('/api/game', async (req, res) => {
-  const pad = 0.04
+app.get('/api/newGame', async (req, res) => {
   const game = new Game()
-  
-  const bounds = {
-    left: Math.min(game.to.lat, game.to.lat) - pad,
-    right: Math.max(game.to.lat, game.to.lat) + pad,
-    top: Math.min(game.to.lon, game.to.lon) - pad,
-    bottom: Math.max(game.to.lon, game.to.lon) + pad
-  }
 
-  const map = await osm.map(bounds)
+  games[game.id.toString()] = game
 
-  return res.send(map)
+  return {
+    gameId: game.id,
+    from: game.from,
+    to: game.to
+  } as NewGameData
 })
 
-app.get('/api/todos', async (req, res) => {
-  const { id } = req.query
-
-  if (id) {
-    const ftch = await fetch(
-      ' https://jsonplaceholder.typicode.com/todos/' + id
-    )
-
-    const json = (await ftch.json()) as Todo
-    return res.json([json])
-  } else {
-    const ftch = await fetch(' https://jsonplaceholder.typicode.com/todos')
-    const json = (await ftch.json()) as Todo[]
-    return res.json(json)
+app.get('/api/gameResults', async (req, res) => {
+  const { gameId, chosenRoute } = req.query
+  if (!id) {
+    return res.sendStatus(400)
   }
+
+  const game = games[id.toString()]
+  if (!game) {
+    return res.status(500)
+  }
+
+  const dat = await inrix.findRoute(game.from, game.to)
+  return res.json(dat)
 })
 
 // Only serve index.html in production.

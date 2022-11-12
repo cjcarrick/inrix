@@ -6,7 +6,7 @@ export default class Game {
   id: number
 
   constructor() {
-    this.id = Math.random() * 1000
+    this.id = Math.floor(Math.random() * 1000)
     this.setLocations()
   }
 

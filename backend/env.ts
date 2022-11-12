@@ -13,9 +13,8 @@ const path = resolve(process.cwd(), '.env.local')
 dotenv.config({ path })
 
 type EnvVars = {
-  HOSTNAME: string
-  NUMBER: number
-  PASSWORD: string
+  HASHTOKEN: string
+  APPID: string
 }
 
 type AnyOtherKey<T extends { [k: string]: any }> = T &

@@ -1,8 +1,3 @@
-export type Location = {
-  name: string
-  lat: number
-  lon: number
-}
 export const locations: Location[] = [
   {
     name: 'sutro',
