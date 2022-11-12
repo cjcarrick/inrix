@@ -16,6 +16,7 @@ specifiers:
   express: ^4.18.2
   prettier: ^2.7.1
   prettier-plugin-organize-imports: ^3.1.1
+  qs: ^6.11.0
   sass: ^1.56.1
   typescript: ^4.6.4
   vite: ^3.2.3
@@ -34,6 +35,7 @@ dependencies:
   express: 4.18.2
   prettier: 2.7.1
   prettier-plugin-organize-imports: 3.1.1_dmjzcauo3cshxeipj7bv64ktgm
+  qs: 6.11.0
   sass: 1.56.1
   vite-plugin-mix: 0.4.0_vite@3.2.3
   vue: 3.2.43
