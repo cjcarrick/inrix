@@ -6,6 +6,7 @@ import {
   NewGameData,
   WalkingDirections
 } from '../lib'
+import busStops from '../lib/Muni_Stops.json'
 import { env } from './env'
 import Game from './game'
 import Inrix from './inrix'
@@ -13,6 +14,17 @@ import Inrix from './inrix'
 const games: { [id: string]: Game } = {}
 const inrix = new Inrix(env.APPID, env.HASHTOKEN)
 const app = express()
+
+app.get('/api/busStations', (req, res) => {
+  const mapped = busStops.map(a => ({
+    name: a.STOPNAME,
+    lat: a.LATITUDE,
+    lon: a.LONGITUDE,
+    atStreet: a.ATSTREET,
+    onStreet: a.ONSTREET
+  }))
+  return res.json(mapped)
+})
 
 app.get('/api/newGame', async (req, res) => {
   const game = new Game()
@@ -26,7 +38,8 @@ app.get('/api/newGame', async (req, res) => {
   } as NewGameData
 })
 
-app.use(express.json).get('/api/travelTime', async (req, res) => {
+app.get('/api/endRound', async (req, res) => {
+  // TODO: app.use(express.json()) causes mix server to hang
   const segments = req.body as (
     | DriveDirections
     | BusDirections
@@ -35,28 +48,13 @@ app.use(express.json).get('/api/travelTime', async (req, res) => {
 
   for (let i = 0, len = segments.length; i < len; i++) {
     const segment = segments[i]
-
     const travel = await inrix.findRoute(segment.from, segment.to)
-
     if (segment.type == 'bus') {
-      return travel.result.trip.routes[0]
+      return travel.result.trip.routes[0].uncongestedTravelTimeMinutes
+    } else if (segment.type == 'walk') {
+      return travel.result.trip.routes[0].travelTimeMinutes
     }
   }
-})
-
-app.get('/api/route', async (req, res) => {
-  const { gameId, chosenRoute } = req.query
-  if (!id) {
-    return res.sendStatus(400)
-  }
-
-  const game = games[id.toString()]
-  if (!game) {
-    return res.status(500)
-  }
-
-  const dat = await inrix.findRoute(game.from, game.to)
-  return res.json(dat)
 })
 
 // Only serve index.html in production.

@@ -22,9 +22,9 @@ export default class Inrix {
   }
 
   private auth = async () => {
+    const params = { appId: this.appId, hashToken: this.hashToken }
     const req = await fetch(
-      this.basename +
-        `/auth/v1/appToken?appId=${this.appId}&hashToken=${this.hashToken}`
+      this.basename + `/auth/v1/appToken?` + qs.stringify(params)
     )
 
     const json = (await req.json()) as Auth
