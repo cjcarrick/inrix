@@ -1,4 +1,4 @@
-import { Location, locations } from './locations'
+import { locations } from './locations'
 
 export default class Game {
   from: Location

@@ -1,6 +1,6 @@
 import qs from 'qs'
 import { Coordinates } from '../lib'
-import { Auth } from '../lib/inrixTypes'
+import { Auth, FindRoute } from '../lib/inrixTypes'
 
 export default class Inrix {
   private basename = 'https://api.iq.inrix.com'
@@ -66,7 +66,7 @@ export default class Inrix {
       format: 'json'
     }
     const json = await this.fetcher(`/findRoute`, params)
-    return json
+    return json as FindRoute
   }
 
   findOnStreetParking = async (location: Coordinates, radius = 150) => {

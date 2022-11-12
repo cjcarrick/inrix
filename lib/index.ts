@@ -3,15 +3,22 @@ export type Coordinates = {
   lon: number
 }
 
-export type Location = Coordinates & {
-  name: string
-  lat: number
-  lon: number
+export type Segment = { from: Coordinates; to: Coordinates }
+export type TravelTime = Segment & { minutes: number }
+export type DriveDirections = TravelTime & { type: 'drive' }
+export type BusDirections = TravelTime & { type: 'bus' }
+export type WalkingDirections = TravelTime & { type: 'walk' }
+export type AllDirections = {
+  bus: BusDirections
+  walk: WalkingDirections
+  drive: DriveDirections
 }
 
+export type Location = Coordinates & { name: string }
+
 export type NewGameData = {
-  from: Coordinates
-  to: Coordinates
+  from: Location
+  to: Location
   gameId: number
 }
 
@@ -27,5 +34,3 @@ export type GameStart = {
   to: Location
   maptiles: string[][]
 }
-
-export type GameResults = {}

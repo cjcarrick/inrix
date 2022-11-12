@@ -1,6 +1,11 @@
 import express from 'express'
 import { type Handler } from 'vite-plugin-mix'
-import { NewGameData } from '../lib'
+import {
+  BusDirections,
+  DriveDirections,
+  NewGameData,
+  WalkingDirections
+} from '../lib'
 import { env } from './env'
 import Game from './game'
 import Inrix from './inrix'
@@ -21,7 +26,25 @@ app.get('/api/newGame', async (req, res) => {
   } as NewGameData
 })
 
-app.get('/api/gameResults', async (req, res) => {
+app.use(express.json).get('/api/travelTime', async (req, res) => {
+  const segments = req.body as (
+    | DriveDirections
+    | BusDirections
+    | WalkingDirections
+  )[]
+
+  for (let i = 0, len = segments.length; i < len; i++) {
+    const segment = segments[i]
+
+    const travel = await inrix.findRoute(segment.from, segment.to)
+
+    if (segment.type == 'bus') {
+      return travel.result.trip.routes[0]
+    }
+  }
+})
+
+app.get('/api/route', async (req, res) => {
   const { gameId, chosenRoute } = req.query
   if (!id) {
     return res.sendStatus(400)
