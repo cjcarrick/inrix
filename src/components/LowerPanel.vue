@@ -1,15 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import type {
-  BusData,
-  Coordinates,
-  Directions,
-  TransportTypes
-} from '../../lib'
+import type { BusData, Directions, TransportTypes } from '../../lib'
 
+// TODO: use the Game class from backend/game.ts
 const props = defineProps<{
-  from: Coordinates
-  to: Coordinates
+  game: Game
   buses: BusData[]
 }>()
 
@@ -30,7 +25,8 @@ const addDirection = (type: TransportTypes) => {
 const busAvalible = (directions: Directions) => {
   if (
     props.buses.find(
-      a => a.lon == directions.from.lon && a.lat == directions.from.lat
+      a =>
+        a.lon == game.directions.from.lon && a.lat == game.directions.from.lat
     )
   ) {
     return true
@@ -44,7 +40,7 @@ const busAvalible = (directions: Directions) => {
   <div class="controls">
     <div class="navTypes">
       <button :disabled="!!pendingDirection" @click="() => addDirection('bus')">
-        Uber
+        Rideshare
       </button>
       <button :disabled="!!pendingDirection" @click="() => addDirection('bus')">
         Bus

@@ -3,11 +3,11 @@ import MapContainer from '../components/MapContainer.vue'
 </script>
 
 <template>
-  <div id="app">
-    <div class="cell cell-map">
-      <MapContainer></MapContainer>
-    </div>
-  </div>
+  <!-- <div id="app"> -->
+  <!--   <div class="cell cell-map"> -->
+  <!--     <MapContainer></MapContainer> -->
+  <!--   </div> -->
+  <!-- </div> -->
 
   <div class="buttonContain">
     <button>Walk</button>

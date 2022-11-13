@@ -1,21 +1,30 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import Estimated from './components/Estimates.vue'
+import MapView from './components/MapContainer.vue'
 import SubmitButton from './components/SubmitButton.vue'
+import TheLoader from './components/TheLoader.vue'
 import Buttons from './views/HomeView.vue'
+import LowerPanel from './components/LowerPanel.vue'
+
+const games = ref()
 </script>
 
 <template>
-  <div class="Maingrid">
-    <h1>RouteFyndr</h1>
-    <Buttons class="ButtonPos" />
-    <SubmitButton class="SubPosition" />
-    <Estimated class="Est" :money="10" :time="10" />
+  <div class="mainGrid">
+    <h1 class="logo">RouteFyndr</h1>
+
+    <TheLoader>
+      <MapView class="map" />
+    </TheLoader>
+
+    <LowerPanel :game="game" />
+
   </div>
-  <router-view />
 </template>
 
 <style lang="scss">
-.Maingrid {
+.mainGrid {
   display: grid;
   position: fixed;
   top: 0;
@@ -24,16 +33,28 @@ import Buttons from './views/HomeView.vue'
   height: 100vh;
   grid-template-columns: 11em 20em 5em 10em auto;
   grid-template-rows: 2em auto 10em;
+  gap: 0.2rem;
 }
-.SubPosition {
+
+.logo {
+  font-size: 2em;
+  grid-row: 1/2;
+  grid-column: 1/5;
+}
+
+.map {
+  grid-row: 2/3;
+  grid-column: 1/4;
+}
+.subPostion {
   grid-row: 3/4;
   grid-column: 1/2;
 }
-.Est {
+.est {
   grid-row: 3/4;
   grid-column: 3/4;
 }
-.ButtonPos {
+.buttonPres {
   grid-row: 3/4;
   grid-column: 2/3;
 }
