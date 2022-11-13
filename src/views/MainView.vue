@@ -10,6 +10,7 @@ import qs from 'qs'
 import { ref } from 'vue'
 import Estimates from '../components/Estimates.vue'
 import MapView from '../components/MapTwo.vue'
+import PendingDirection from '../components/PendingDirection.vue'
 import TheLoader from '../components/TheLoader.vue'
 import CurrentTotals from '../components/CurrentTotals.vue'
 import RoundNumber from "../components/RoundNumber.vue"
@@ -17,11 +18,12 @@ import FareBudget from "../components/FareBudget.vue"
 import CurrentTime from "../components/CurrentTime.vue"
 import BusTimes from "../components/BusTimes.vue"
 
+const instruction = ref('Pick where to go next.')
+
 // TODO: Add buses to the map
 const buses: BusData[] = await (await fetch('/api/busStations')).json()
 
 const game: NewGameData = await (await fetch('/api/newGame')).json()
-console.log({ game })
 
 const moves = ref<Directions[]>([])
 const pendingMove = ref<undefined | Directions>(undefined)
@@ -32,6 +34,8 @@ const getRideShares = async (from: Coordinates, to: Coordinates) => {
   const json: RideShareData[] = await req.json()
   rideShares.value = json
 }
+// Get rideshares for the starting position
+getRideShares(game.from)
 
 const gnames = ref()
 const addDirection = () => {
@@ -63,19 +67,26 @@ const busAvalible = (directions: Directions) => {
       <MapView
         class="map"
         :buses="buses"
+        :rideshares="rideshares"
         :from="game.from"
         :to="game.to"
         :ride-shares="rideShares"
-        @addPoint="(lat: number, lon: number) => (pendingMove = { type: 'walk',
-      from: { lat: moves[moves.length - 1].to.lat, lon: moves[moves.length
-      -1].to.lon }, to : { lat, lon } })"
+        @setActive="(move: Directions) => (pendingMove = move)"
       />
     </TheLoader>
+
+    <p class="instruction" v-if="instruction">{{ instruction }}</p>
+
+    <PendingDirection
+      v-if="pendingMove"
+      :directions="pendingMove"
+      class="pendingMove"
+    />
 
     <div class="navTypes">
       <button
         :disabled="!!pendingMove"
-        @click="() => !!pendingMove && (pendingMove.type = 'drive')"
+        @click="() => !!pendingMove && (pendingMove.type = 'rideShares')"
       >
         Rideshare
       </button>
@@ -140,6 +151,10 @@ const busAvalible = (directions: Directions) => {
   grid-row: 3/4;
   grid-column: 1/3;
 }
+.instruction {
+  grid-row: 2/3;
+  grid-column: 4/5;
+}
 .subPostion {
   grid-row: 3/4;
   grid-column: 1/2;
@@ -156,8 +171,10 @@ const busAvalible = (directions: Directions) => {
   grid-row: 4/5;
   grid-column: 2/3;
 }
-
-
+.pendingMove {
+  grid-column: 4/5;
+  grid-row: 3/4;
+}
 // an unscoped scss is required in App.vue for main.scss to properly load.
 // Components don't need this.
 // and to be honest i have no idea why

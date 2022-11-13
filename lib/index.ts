@@ -5,6 +5,7 @@ export type Coordinates = {
 
 export type RideShareData = {
   timeToGetHere: number
+  timeToGetThere: number
   cost: number
   location: Location
 }
@@ -19,7 +20,7 @@ export type BusData = {
   onStreet: string
 }
 
-export type TransportTypes = 'bus' | 'walk' | 'drive'
+export type TransportTypes = 'bus' | 'walk' | 'rideShares'
 export type Directions = {
   type: TransportTypes
   from: Coordinates

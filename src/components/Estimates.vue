@@ -1,51 +1,13 @@
 <script setup lang="ts">
-import { ClockIcon, CurrencyDollarIcon } from '@heroicons/vue/24/solid'
+import StatsList from './StatsList.vue'
 defineProps<{ money: number; time: number }>()
 </script>
 
 <template>
-  <div class="stats">
-    <div class="stat">
-      <CurrencyDollarIcon />
-      <div class="num">{{ money }}</div>
-    </div>
-    <div class="stat">
-      <ClockIcon />
-      <div class="num">{{ money }}</div>
-    </div>
-    <div class="stat">
-      <ClockIcon />
-      <div class="num">{{ money }}</div>
-    </div>
-  </div>
+  <StatsList
+    :stats="[
+      { key: 'Money', value: money },
+      { key: 'Time', value: time }
+    ]"
+  />
 </template>
-
-<style lang="scss" scoped>
-.stats {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: $pad;
-}
-.stat {
-  flex: 1;
-  background: rgba($color: gray, $alpha: 0.1);
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  padding: $pad;
-  gap: $pad;
-  border-radius: $br;
-  min-width: 4rem;
-  @include ms-depth(4);
-}
-.num {
-  background: rgba($color: gray, $alpha: 0.1);
-  align-self: center;
-  vertical-align: center;
-  border-radius: $br;
-  flex: 1;
-  padding: $pad;
-  text-align: end;
-}
-</style>
