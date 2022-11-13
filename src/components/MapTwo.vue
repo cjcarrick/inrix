@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { inject, ref } from 'vue'
 
-const center = ref([40, 40])
+const center = ref([-122.4376, 37.7577])
 const projection = ref('EPSG:4326')
-const zoom = ref(8)
+const zoom = ref(12)
 const rotation = ref(0)
 
 const format = inject('ol-format')
@@ -14,11 +14,11 @@ const selectConditions = inject('ol-selectconditions')
 
 const selectCondition = selectConditions.click
 
-const featureSelected = event => {
+const featureSelected = (event: any) => {
   console.log(event)
 }
 
-const selectInteactionFilter = feature => {
+const selectInteactionFilter = (feature: { values_: { name: undefined; }; }) => {
   return feature.values_.name != undefined
 }
 </script>
