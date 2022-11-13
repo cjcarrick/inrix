@@ -17,18 +17,24 @@ const inrix = new Inrix(env.APPID, env.HASHTOKEN)
 const app = express()
 
 app.get('/api/busStations', (req, res) => {
-  const mapped = busStops
-    .filter((a, i) => i % 16 == 0)
-    .map(
-      a =>
-        ({
-          name: a.STOPNAME,
-          lat: a.LATITUDE,
-          lon: a.LONGITUDE,
-          atStreet: a.ATSTREET,
-          onStreet: a.ONSTREET
-        } as BusData)
-    )
+  var mapped = busStops.map(
+    a =>
+    ({
+      name: a.STOPNAME,
+      lat: a.LATITUDE,
+      lon: a.LONGITUDE,
+      atStreet: a.ATSTREET,
+      onStreet: a.ONSTREET
+    } as BusData)
+  )
+  mapped = mapped.filter((a, i) => {
+    
+    for (let j = 0; j < i; j++) {
+      if (Math.abs(mapped[j].lat - a.lat) < 0.0035 && Math.abs(mapped[j].lon - a.lon) < 0.0035)
+        return false;
+    }
+    return true
+  })
   return res.json(mapped)
 })
 

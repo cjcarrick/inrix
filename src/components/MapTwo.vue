@@ -22,7 +22,7 @@ const geoJson = new format.GeoJSON()
 const selectConditions = inject('ol-selectconditions')
 const selectCondition = selectConditions.click
 
-const featureSelected = event => {
+const featureSelected = (event: any) => {
   console.log(event)
   emit('setDestination', event)
 }
@@ -77,20 +77,6 @@ const featureSelected = event => {
     <!--   </ol-feature> -->
     <!-- </ol-source-vector> -->
 
-    <!-- <ol-vector-layer> -->
-    <!--   <ol-source-vector> -->
-    <!--     <ol-feature> -->
-    <!--       <ol-geom-point :coordinates="[from.lon, from.lat]"></ol-geom-point> -->
-    <!--       <ol-style> -->
-    <!--         <ol-style-circle :radius="10"> -->
-    <!--           <ol-style-fill :color="'green'"></ol-style-fill> -->
-    <!--           <ol-style-stroke :color="'green'" :width="4"></ol-style-stroke> -->
-    <!--         </ol-style-circle> -->
-    <!--       </ol-style> -->
-    <!--     </ol-feature> -->
-    <!--   </ol-source-vector> -->
-    <!-- </ol-vector-layer> -->
-
     <ol-vector-layer>
       <ol-source-vector>
         <ol-feature v-for="(a, i) in buses" :key="i">
@@ -107,6 +93,34 @@ const featureSelected = event => {
               </ol-style-circle>
             </ol-style>
           </ol-interaction-select>
+        </ol-feature>
+      </ol-source-vector>
+    </ol-vector-layer>
+    <ol-vector-layer>
+      <ol-source-vector>
+        <ol-feature>
+          <ol-geom-point :coordinates="[from.lon, from.lat]"></ol-geom-point>
+          <ol-style>
+            <ol-style-icon
+              src="https://upload.wikimedia.org/wikipedia/commons/d/db/Walk_icon.png"
+              scale="0.02"
+            >
+            </ol-style-icon>
+          </ol-style>
+        </ol-feature>
+      </ol-source-vector>
+    </ol-vector-layer>
+    <ol-vector-layer>
+      <ol-source-vector>
+        <ol-feature>
+          <ol-geom-point :coordinates="[to.lon, to.lat]"></ol-geom-point>
+          <ol-style>
+            <ol-style-icon
+              src="https://upload.wikimedia.org/wikipedia/commons/e/ed/Map_pin_icon.svg"
+              scale="0.2"
+            >
+            </ol-style-icon>
+          </ol-style>
         </ol-feature>
       </ol-source-vector>
     </ol-vector-layer>
