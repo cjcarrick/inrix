@@ -44,7 +44,7 @@ const busAvalible = (directions: Directions) => {
 
 <template>
   <div class="mainGrid">
-    <h1 class="logo">RouteFyndr</h1>
+    <h1 class="logo">RouteRacer</h1>
 
     <TheLoader>
       <MapView
@@ -124,7 +124,13 @@ const busAvalible = (directions: Directions) => {
 // an unscoped scss is required in App.vue for main.scss to properly load.
 // Components don't need this.
 // and to be honest i have no idea why
-
+@font-face {
+  font-family: '04b09regular';
+  src: url('04b_09__-webfont.woff2') format('woff2'),
+    url('04b_09__-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
 main {
   display: grid;
   position: fixed;
