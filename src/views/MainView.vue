@@ -11,6 +11,11 @@ import { ref } from 'vue'
 import Estimates from '../components/Estimates.vue'
 import MapView from '../components/MapTwo.vue'
 import TheLoader from '../components/TheLoader.vue'
+import CurrentTotals from '../components/CurrentTotals.vue'
+import RoundNumber from "../components/RoundNumber.vue"
+import FareBudget from "../components/FareBudget.vue"
+import CurrentTime from "../components/CurrentTime.vue"
+import BusTimes from "../components/BusTimes.vue"
 
 // TODO: Add buses to the map
 const buses: BusData[] = await (await fetch('/api/busStations')).json()
@@ -89,9 +94,14 @@ const busAvalible = (directions: Directions) => {
     </div>
 
     <Estimates :money="10" :time="14" class="estimates" />
+    <CurrentTotals :tMoney=" 15" :tTime = "25" class="theTotals"/>
+    <RoundNumber :round="1" class="roundNumber" />
+    <FareBudget :fare="15" class="fareBudget" />
+    <CurrentTime :current= "new Date()" class="currentTime" />
+    <BusTimes :bus = "new Date()" class="busTimes" />
+    
   </div>
 </template>
-
 <style lang="scss">
 .mainGrid {
   display: grid;
@@ -100,8 +110,8 @@ const busAvalible = (directions: Directions) => {
   left: 0;
   width: 100vw;
   height: 100vh;
-  grid-template-columns: 11em 20em 5em 10em auto;
-  grid-template-rows: 5em auto 10em;
+  grid-template-columns: 8em 25em 8em auto;
+  grid-template-rows: 5em 5em 1fr 10em;
   gap: 0.2rem;
 }
 
@@ -110,27 +120,44 @@ const busAvalible = (directions: Directions) => {
   grid-row: 1/2;
   grid-column: 1/5;
 }
-
-.map {
-  grid-row: 2/3;
-  grid-column: 1/4;
+.busTimes{
+  grid-row: 2/5;
+  grid-column: 4/6;
+}
+.roundNumber{
+  grid-row: 2/5;
+  grid-column: 1/6;
+}
+.currentTime{
+  grid-row: 2/5;
+  grid-column: 2/6;
+}
+.fareBudget{
+  grid-row: 2/5;
+  grid-column: 3/6;
+}
+.map{
+  grid-row: 3/4;
+  grid-column: 1/3;
 }
 .subPostion {
   grid-row: 3/4;
   grid-column: 1/2;
 }
-.est {
-  grid-row: 3/4;
+.theTotals {
+  grid-row: 4/5;
+  grid-column: 4/6;
+}
+.estimates {
+  grid-row: 4/5;
   grid-column: 3/4;
 }
 .navTypes {
-  grid-row: 3/4;
+  grid-row: 4/5;
   grid-column: 2/3;
 }
-.estimates {
-  grid-row: 3/4;
-  grid-column: 3/4;
-}
+
+
 // an unscoped scss is required in App.vue for main.scss to properly load.
 // Components don't need this.
 // and to be honest i have no idea why
