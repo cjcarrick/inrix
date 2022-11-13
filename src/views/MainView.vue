@@ -76,7 +76,7 @@ const busAvalible = (directions: Directions) => {
   width: 100vw;
   height: 100vh;
   grid-template-columns: 11em 20em 5em 10em auto;
-  grid-template-rows: 2em auto 10em;
+  grid-template-rows: 5em auto 10em;
   gap: 0.2rem;
 }
 
