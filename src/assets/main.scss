@@ -66,6 +66,7 @@ button {
   background: transparent;
   border: 2px solid $color;
   cursor: pointer;
+  color: white;
 
   &:disabled {
     opacity: 0.3;

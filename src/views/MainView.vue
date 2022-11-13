@@ -160,11 +160,11 @@ const busAvalible = (directions: Directions) => {
   grid-column: 1/2;
 }
 .theTotals {
-  grid-row: 4/5;
+  grid-row: 3/5;
   grid-column: 4/6;
 }
 .estimates {
-  grid-row: 4/5;
+  grid-row: 3/5;
   grid-column: 3/4;
 }
 .navTypes {
