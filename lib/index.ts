@@ -4,14 +4,25 @@ export type Coordinates = {
 }
 
 export type Segment = { from: Coordinates; to: Coordinates }
-export type TravelTime = Segment & { minutes: number }
-export type DriveDirections = TravelTime & { type: 'drive' }
-export type BusDirections = TravelTime & { type: 'bus' }
-export type WalkingDirections = TravelTime & { type: 'walk' }
-export type AllDirections = {
-  bus: BusDirections
-  walk: WalkingDirections
-  drive: DriveDirections
+
+export type BusData = {
+  name: string
+  lat: number
+  lon: number
+  atStreet: string
+  onStreet: string
+}
+
+export type TransportTypes = 'bus' | 'walk' | 'drive'
+export type Directions = {
+  type: TransportTypes
+  from: Coordinates
+  to: Coordinates
+
+  /** Undefined if the server hasn't determined the steps */
+  steps?: Coordinates[]
+  /** Undefined if the server hasn't determined the time */
+  minutes?: number
 }
 
 export type Location = Coordinates & { name: string }
