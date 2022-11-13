@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { BusData } from 'lib'
 import { inject, ref } from 'vue'
-
 const props = defineProps<{ buses: BusData[] }>()
 
 const center = ref([-122.4418518, 37.7623168])
@@ -25,7 +24,7 @@ const featureSelected = event => {
   console.log(event)
 }
 
-const selectInteactionFilter = feature => {
+const selectInteactionFilter = (feature: { values_: { name: undefined } }) => {
   return feature.values_.name != undefined
 }
 </script>
@@ -36,8 +35,7 @@ const selectInteactionFilter = feature => {
     :loadTilesWhileInteracting="true"
     style="height: 400px"
   >
-    <ol-view
-      ref="view"
+    <ol-view ref="view"
       :center="center"
       :rotation="rotation"
       :zoom="zoom"
