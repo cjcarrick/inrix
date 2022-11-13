@@ -3,6 +3,12 @@ export type Coordinates = {
   lon: number
 }
 
+export type RideShareData = {
+  timeToGetHere: number
+  cost: number
+  location: Location
+}
+
 export type Segment = { from: Coordinates; to: Coordinates }
 
 export type BusData = {
@@ -25,7 +31,7 @@ export type Directions = {
   minutes?: number
 }
 
-export type Location = Coordinates;
+export type Location = Coordinates
 
 export type NewGameData = {
   from: Location

@@ -1,6 +1,12 @@
 import express from 'express'
 import { type Handler } from 'vite-plugin-mix'
-import { BusData, Directions, NewGameData } from '../lib'
+import {
+  BusData,
+  Coordinates,
+  Directions,
+  NewGameData,
+  RideShareData
+} from '../lib'
 import busStops from '../lib/Muni_Stops.json'
 import { env } from './env'
 import Game from './game'
@@ -34,6 +40,35 @@ app.get('/api/newRound', async (req, res) => {
     from: game.from,
     to: game.to
   } as NewGameData
+})
+
+app.get('/api/rideshares', async (req, res) => {
+  const { from, to } = req.query
+
+  const fromObj = JSON.parse(from?.toString() || '{}') as Coordinates
+  const toObj = JSON.parse(to?.toString() || '{}') as Coordinates
+
+  if (!fromObj.lat || !fromObj.lon || !toObj.lat || !toObj.lon) {
+    return res.sendStatus(400)
+  }
+
+  const route = (await inrix.findRoute(fromObj, toObj)).result.trip.routes[0]
+
+  const rides: RideShareData[] = []
+  const cost = 2 + 1 * parseFloat(route.totalDistance)
+
+  for (let i = 0, len = Math.floor(8 * Math.random()); i < len; i++) {
+    rides.push({
+      cost,
+      timeToGetHere: route.travelTimeMinutes,
+      location: {
+        lat: fromObj.lat - 0.001 + Math.random() / 0.002,
+        lon: fromObj.lon - 0.001 + Math.random() / 0.002
+      }
+    })
+  }
+
+  return res.json(rides)
 })
 
 app.get('/api/advance', async (req, res) => {
