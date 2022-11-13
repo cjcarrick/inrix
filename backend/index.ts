@@ -68,16 +68,20 @@ app.get('/api/rideshares', async (req, res) => {
     return res.sendStatus(400)
   }
 
-  const route = (await inrix.findRoute(fromObj, toObj)).result.trip.routes[0]
+  // Find a route all rideshare drivers have to take
+  const allRoutes = (await inrix.findRoute(fromObj, toObj)).result
+  const route = allRoutes.trip.routes[0]
 
   const rides: RideShareData[] = []
   const cost = 2 + 1 * parseFloat(route.totalDistance)
 
   for (let i = 0, len = Math.floor(8 * Math.random()); i < len; i++) {
+    const uberDeltaMax = 0.005
     const uberStart: Coordinates = {
-      lat: fromObj.lat - 0.001 + Math.random() / 0.002,
-      lon: fromObj.lon - 0.001 + Math.random() / 0.002
+      lat: fromObj.lat - uberDeltaMax / 2 + Math.random() * uberDeltaMax,
+      lon: fromObj.lon - uberDeltaMax / 2 + Math.random() * uberDeltaMax
     }
+    console.log(fromObj.lat, uberStart.lat)
 
     const uberArrival = (await inrix.findRoute(uberStart, fromObj)).result.trip
       .routes[0]
@@ -86,6 +90,10 @@ app.get('/api/rideshares', async (req, res) => {
       cost,
       timeToGetHere: uberArrival.travelTimeMinutes,
       timeToGetThere: route.travelTimeMinutes,
+      routePoints: allRoutes.trip.wayPoints.map(a => ({
+        lat: a.geometry.coordinates[0][1],
+        lon: a.geometry.coordinates[0][0]
+      })),
       location: uberStart
     })
   }
@@ -124,7 +132,7 @@ app.get('/api/advance', async (req, res) => {
     } else if (direction.type == 'walk') {
       direction.minutes =
         parseFloat(travel.result.trip.routes[0].totalDistance) * 10
-    } else if (direction.type == 'drive') {
+    } else if (direction.type == 'rideShares') {
       direction.minutes =
         travel.result.trip.routes[0].uncongestedTravelTimeMinutes / 3
     }
