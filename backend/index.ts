@@ -17,29 +17,32 @@ const inrix = new Inrix(env.APPID, env.HASHTOKEN)
 const app = express()
 
 app.get('/api/busStations', (req, res) => {
-  const mapped = busStops.map(
-    a =>
-      ({
-        name: a.STOPNAME,
-        lat: a.LATITUDE,
-        lon: a.LONGITUDE,
-        atStreet: a.ATSTREET,
-        onStreet: a.ONSTREET
-      } as BusData)
-  )
+  const mapped = busStops
+    .filter((a, i) => i % 16 == 0)
+    .map(
+      a =>
+        ({
+          name: a.STOPNAME,
+          lat: a.LATITUDE,
+          lon: a.LONGITUDE,
+          atStreet: a.ATSTREET,
+          onStreet: a.ONSTREET
+        } as BusData)
+    )
   return res.json(mapped)
 })
 
-app.get('/api/newRound', async (req, res) => {
+app.get('/api/newGame', async (req, res) => {
   const game = new Game()
 
   games[game.id.toString()] = game
 
-  return {
+  const json: NewGameData = {
     gameId: game.id,
-    from: game.from,
-    to: game.to
-  } as NewGameData
+    from: game.rounds[game.round].from,
+    to: game.rounds[game.round].to
+  }
+  return res.json(json)
 })
 
 app.get('/api/rideshares', async (req, res) => {

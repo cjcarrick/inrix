@@ -1,10 +1,7 @@
-import { Location } from '../lib'
 import Player from './player'
 import Round from './round'
 
 export default class Game {
-  from: Location
-  to: Location
   id: number
   players: Player[]
   rounds: Round[]
@@ -15,6 +12,7 @@ export default class Game {
     this.players = []
     this.round = 1
 
+    this.rounds = []
     for (let i = 1; i <= this.numRounds; i++) {
       this.rounds.push(new Round(i))
     }

@@ -1,14 +1,22 @@
 <script setup lang="ts">
-import { BusData, Coordinates, Directions, RideShareData } from 'lib'
+import {
+  BusData,
+  Coordinates,
+  Directions,
+  NewGameData,
+  RideShareData
+} from 'lib'
 import qs from 'qs'
 import { ref } from 'vue'
 import Estimates from '../components/Estimates.vue'
 import MapView from '../components/MapTwo.vue'
-// import MapView from '../components/MapContainer.vue'
 import TheLoader from '../components/TheLoader.vue'
 
 // TODO: Add buses to the map
 const buses: BusData[] = await (await fetch('/api/busStations')).json()
+
+const game: NewGameData = await (await fetch('/api/newGame')).json()
+console.log({ game })
 
 const moves = ref<Directions[]>([])
 const pendingMove = ref<undefined | Directions>(undefined)
@@ -50,6 +58,8 @@ const busAvalible = (directions: Directions) => {
       <MapView
         class="map"
         :buses="buses"
+        :from="game.from"
+        :to="game.to"
         :ride-shares="rideShares"
         @addPoint="(lat: number, lon: number) => (pendingMove = { type: 'walk',
       from: { lat: moves[moves.length - 1].to.lat, lon: moves[moves.length
