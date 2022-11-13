@@ -6,11 +6,17 @@ import {
   NewGameData,
   RideShareData
 } from 'lib'
-import { ref, watch } from 'vue'
+import qs from 'qs'
+import { ref } from 'vue'
 import Estimates from '../components/Estimates.vue'
 import MapView from '../components/MapTwo.vue'
 import PendingDirection from '../components/PendingDirection.vue'
 import TheLoader from '../components/TheLoader.vue'
+import CurrentTotals from '../components/CurrentTotals.vue'
+import RoundNumber from "../components/RoundNumber.vue"
+import FareBudget from "../components/FareBudget.vue"
+import CurrentTime from "../components/CurrentTime.vue"
+import BusTimes from "../components/BusTimes.vue"
 
 const instruction = ref('Pick where to go next.')
 
@@ -24,26 +30,12 @@ const pendingMove = ref<undefined | Directions>(undefined)
 
 const rideShares = ref<RideShareData[]>([])
 const getRideShares = async (from: Coordinates, to: Coordinates) => {
-  console.log({ from, to })
-  const req = await fetch(
-    '/api/rideshares?from=' +
-      encodeURIComponent(JSON.stringify(from)) +
-      '&to=' +
-      encodeURIComponent(JSON.stringify(from))
-  )
+  const req = await fetch('/api/rideshares?' + qs.stringify({ from, to }))
   const json: RideShareData[] = await req.json()
-  console.log('got ridesahres', { json })
   rideShares.value = json
 }
-
-// Update the uber drivers whenever the player picks a place to go
-watch(pendingMove, async () => {
-  if (!pendingMove.value) {
-    return
-  } else {
-    await getRideShares(pendingMove.value.from, pendingMove.value.to)
-  }
-})
+// Get rideshares for the starting position
+getRideShares(game.from)
 
 const gnames = ref()
 const addDirection = () => {
@@ -75,11 +67,11 @@ const busAvalible = (directions: Directions) => {
       <MapView
         class="map"
         :buses="buses"
+        :rideshares="rideshares"
         :from="game.from"
         :to="game.to"
         :ride-shares="rideShares"
-        @setActive="(move: Directions) =>
-      (pendingMove = move)"
+        @setActive="(move: Directions) => (pendingMove = move)"
       />
     </TheLoader>
 
@@ -113,9 +105,14 @@ const busAvalible = (directions: Directions) => {
     </div>
 
     <Estimates :money="10" :time="14" class="estimates" />
+    <CurrentTotals :tMoney=" 15" :tTime = "25" class="theTotals"/>
+    <RoundNumber :round="1" class="roundNumber" />
+    <FareBudget :fare="15" class="fareBudget" />
+    <CurrentTime :current= "new Date()" class="currentTime" />
+    <BusTimes :bus = "new Date()" class="busTimes" />
+    
   </div>
 </template>
-
 <style lang="scss">
 .mainGrid {
   display: grid;
@@ -124,8 +121,8 @@ const busAvalible = (directions: Directions) => {
   left: 0;
   width: 100vw;
   height: 100vh;
-  grid-template-columns: 11em 20em 5em 10em auto;
-  grid-template-rows: 5em auto 10em;
+  grid-template-columns: 8em 25em 8em auto;
+  grid-template-rows: 5em 5em 1fr 10em;
   gap: 0.2rem;
 }
 
@@ -134,30 +131,45 @@ const busAvalible = (directions: Directions) => {
   grid-row: 1/2;
   grid-column: 1/5;
 }
-
+.busTimes{
+  grid-row: 2/5;
+  grid-column: 4/6;
+}
+.roundNumber{
+  grid-row: 2/5;
+  grid-column: 1/6;
+}
+.currentTime{
+  grid-row: 2/5;
+  grid-column: 2/6;
+}
+.fareBudget{
+  grid-row: 2/5;
+  grid-column: 3/6;
+}
+.map{
+  grid-row: 3/4;
+  grid-column: 1/3;
+}
 .instruction {
   grid-row: 2/3;
   grid-column: 4/5;
-}
-.map {
-  grid-row: 2/3;
-  grid-column: 1/4;
 }
 .subPostion {
   grid-row: 3/4;
   grid-column: 1/2;
 }
-.est {
-  grid-row: 3/4;
+.theTotals {
+  grid-row: 4/5;
+  grid-column: 4/6;
+}
+.estimates {
+  grid-row: 4/5;
   grid-column: 3/4;
 }
 .navTypes {
-  grid-row: 3/4;
+  grid-row: 4/5;
   grid-column: 2/3;
-}
-.estimates {
-  grid-row: 3/4;
-  grid-column: 3/4;
 }
 .pendingMove {
   grid-column: 4/5;
@@ -166,7 +178,13 @@ const busAvalible = (directions: Directions) => {
 // an unscoped scss is required in App.vue for main.scss to properly load.
 // Components don't need this.
 // and to be honest i have no idea why
-
+@font-face {
+  font-family: '04b09regular';
+  src: url('04b_09__-webfont.woff2') format('woff2'),
+    url('04b_09__-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
 main {
   display: grid;
   position: fixed;

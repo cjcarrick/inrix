@@ -1,3 +1,9 @@
+<script setup lang="ts">
+defineProps<{bus: Date}>()
+</script>
 <template>
-  <p>Bus times</p>
+  <div>
+    <p>Time Until Next Bus</p>
+    <h4>{{ 15 - bus.getMinutes()%15 }}</h4>
+  </div>
 </template>
