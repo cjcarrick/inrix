@@ -1,15 +1,22 @@
 <script setup lang="ts">
 import MapContainer from '../components/MapContainer.vue'
 </script>
+
 <template>
   <div id="app">
     <div class="cell cell-map">
       <MapContainer></MapContainer>
     </div>
   </div>
+
+  <div class="buttonContain">
+    <button>Walk</button>
+    <button>Bus</button>
+    <button>Ride Share</button>
+  </div>
 </template>
 
-<style>
+<style lang="scss" scoped>
 html,
 body {
   height: 100%;
@@ -35,5 +42,10 @@ body {
   grid-column: 1;
   grid-row-start: 1;
   grid-row-end: 3;
+}
+
+.buttonContain {
+  display: flex;
+  flex-direction: column;
 }
 </style>
