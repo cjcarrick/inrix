@@ -79,7 +79,7 @@ const featureSelected = (event: any) => {
       :condition="selectCondition"
       v-for="(a, i) in rideShares"
       @select="
-        () => placePoint({ lat: a.location.lat, lon: a.location.lon }, 'drive')
+        () => placePoint({ lat: a.location.lat, lon: a.location.lon }, 'walk')
       "
       :key="i"
     >
@@ -116,38 +116,28 @@ const featureSelected = (event: any) => {
               </ol-style-icon>
             </ol-style>
           </ol-feature>
+          <ol-feature>
+          <ol-geom-point :coordinates="[from.lon, from.lat]"></ol-geom-point>
+          <ol-style>
+            <ol-style-icon src="https://upload.wikimedia.org/wikipedia/commons/f/f2/BSicon_WALK.svg" scale="0.05">
+            </ol-style-icon>
+          </ol-style>
+         </ol-feature>
+         <ol-feature>
+          <ol-geom-point :coordinates="[to.lon, to.lat]"></ol-geom-point>
+          <ol-style>
+            <ol-style-icon src="https://upload.wikimedia.org/wikipedia/commons/e/ed/Map_pin_icon.svg" scale="0.2">
+            </ol-style-icon>
+          </ol-style>
+        </ol-feature>
+        <ol-feature>
+          <ol-geom-line-string :coordinates="[[from.lon, from.lat],[to.lon, to.lat]]"></ol-geom-line-string>
+          <ol-style>
+            <ol-style-stroke :color="'rgba(192,0,0,1)'" :width="3.5"></ol-style-stroke>
+          </ol-style>
+        </ol-feature>
         </ol-source-vector>
       </ol-vector-layer>
     </ol-interaction-select>
-
-    <ol-vector-layer>
-      <ol-source-vector>
-        <ol-feature>
-          <ol-geom-point :coordinates="[from.lon, from.lat]"></ol-geom-point>
-          <ol-style>
-            <ol-style-icon
-              src="https://upload.wikimedia.org/wikipedia/commons/d/db/Walk_icon.png"
-              :scale="0.05"
-            >
-            </ol-style-icon>
-          </ol-style>
-        </ol-feature>
-      </ol-source-vector>
-    </ol-vector-layer>
-
-    <ol-vector-layer>
-      <ol-source-vector>
-        <ol-feature>
-          <ol-geom-point :coordinates="[to.lon, to.lat]"></ol-geom-point>
-          <ol-style>
-            <ol-style-icon
-              src="https://upload.wikimedia.org/wikipedia/commons/e/ed/Map_pin_icon.svg"
-              scale="0.2"
-            >
-            </ol-style-icon>
-          </ol-style>
-        </ol-feature>
-      </ol-source-vector>
-    </ol-vector-layer>
   </ol-map>
 </template>
