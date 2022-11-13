@@ -121,7 +121,7 @@ const busAvalible = (directions: Directions) => {
   left: 0;
   width: 100vw;
   height: 100vh;
-  grid-template-columns: 8em 25em 8em auto;
+  grid-template-columns: 8em 25em 8em 10em auto;
   grid-template-rows: 5em 5em 1fr 10em;
   gap: 0.2rem;
 }
@@ -153,7 +153,7 @@ const busAvalible = (directions: Directions) => {
 }
 .instruction {
   grid-row: 2/3;
-  grid-column: 4/5;
+  grid-column: 5/6;
 }
 .subPostion {
   grid-row: 3/4;
@@ -172,7 +172,7 @@ const busAvalible = (directions: Directions) => {
   grid-column: 2/3;
 }
 .pendingMove {
-  grid-column: 4/5;
+  grid-column: 5/6;
   grid-row: 3/4;
 }
 // an unscoped scss is required in App.vue for main.scss to properly load.
