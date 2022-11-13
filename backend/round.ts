@@ -2,7 +2,7 @@ import { Coordinates } from '../lib'
 import { arr } from './locations'
 import { Location } from '../lib'
  
-export default class Game {
+export default class Round {
   from: Location
   to: Location
   id: number

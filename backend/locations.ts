@@ -1,12 +1,12 @@
-export const locations: Location[] = [
-  {
-    name: 'sutro',
-    lat: 37.755454,
-    lon: -122.453055
-  },
-  {
-    name: 'coit',
-    lat: 37.802739,
-    lon: -122.406258
-  }
-]
+import { Coordinates } from "../lib";
+
+let arr: Coordinates[] = []
+
+for (let i = 0; i < 100; i++) {
+  arr.push({
+    lat: Math.random() * 0.054334 + 37.730666,
+    lon: Math.random() * 0.11534 - 122.504890
+  })
+}
+
+export { arr }

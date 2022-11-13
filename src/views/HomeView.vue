@@ -1,10 +1,39 @@
-<script lang="ts" setup>
-import ControlButtons from '../components/ControlButtons.vue'
+<script setup lang="ts">
+import MapContainer from '../components/MapContainer.vue'
 
-const from = ref<undefined | Coordinates>()
 </script>
-
 <template>
-  <h1>This is the home page</h1>
-  <!-- <ControlButtons :buses="buses" /> -->
+  <div id="app">
+    <div class="cell cell-map">
+      <MapContainer></MapContainer>
+    </div>
+  </div>
 </template>
+
+<style>
+  html, body {
+    height: 100%;
+    margin: 0;
+  }
+
+  #app {
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+    display: grid;
+    grid-template-columns: 100vw;
+    grid-auto-rows: 7.5em;
+    grid-gap: 0rem;
+    padding: 1rem;
+    box-sizing: border-box;
+  }
+
+  .cell {
+    border-radius: 4px;
+    background-color: rgb(141, 75, 75);
+  }
+
+  .cell-map {
+    grid-column: 1;
+    grid-row-start: 1;
+    grid-row-end: 3;
+  }
+</style>

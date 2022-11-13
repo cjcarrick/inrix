@@ -1,19 +1,11 @@
 <script setup lang="ts"></script>
 
 <template>
-  <!-- <div id="nav"> -->
-  <!--   <router-link to="/">Home</router-link> | -->
-  <!--   <router-link to="/about">About</router-link> | -->
-  <!--   <router-link to="/todos">Todos</router-link> | -->
-  <!--   <router-link to="/todos/1">First Todo</router-link> -->
-  <!-- </div> -->
-  <!-- <router-view /> -->
-
-  <!-- <main> -->
-
-  <!-- </main> -->
-
-  <main></main>
+  <div class="nav">
+    <router-link to="/">Home</router-link> |
+    <router-link to="/about">About</router-link> 
+  </div>
+  <router-view />
 </template>
 
 <style lang="scss">
@@ -33,16 +25,16 @@ main {
   grid-template-rows: 100px auto;
 }
 </style>
-
 <style lang="scss" scoped>
-nav {
-  padding: 30px;
+.nav {
+  padding: 1px;
+  height: 30%;
 }
 
 a {
   font-weight: bold;
   color: #2c3e50;
-
+  height: 10%;
   &.router-link-exact-active {
     color: $green;
   }

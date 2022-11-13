@@ -25,7 +25,7 @@ export type Directions = {
   minutes?: number
 }
 
-export type Location = Coordinates & { name: string }
+export type Location = Coordinates;
 
 export type NewGameData = {
   from: Location
