@@ -19,7 +19,7 @@ export type BusData = {
   onStreet: string
 }
 
-export type TransportTypes = 'bus' | 'walk' | 'drive'
+export type TransportTypes = 'bus' | 'walk' | 'rideShares'
 export type Directions = {
   type: TransportTypes
   from: Coordinates
