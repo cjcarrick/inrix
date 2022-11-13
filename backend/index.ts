@@ -101,6 +101,32 @@ app.get('/api/rideshares', async (req, res) => {
   return res.json(rides)
 })
 
+app.get('/api/findRoute', async (req, res) => {
+  const { from, to } = req.query
+
+  const fromObj = JSON.parse(
+    decodeURIComponent(from?.toString() || '{}')
+  ) as Coordinates
+
+  const toObj = JSON.parse(
+    decodeURIComponent(to?.toString() || '{}')
+  ) as Coordinates
+
+  if (!fromObj.lat || !fromObj.lon || !toObj.lat || !toObj.lon) {
+    return res.sendStatus(400)
+  }
+
+  // Find a route all rideshare drivers have to take
+  const route = (await inrix.findRoute(fromObj, toObj)).result
+
+  return res.json(
+    route.trip.wayPoints.map(a => ({
+      lat: a.geometry.coordinates[0][1],
+      lon: a.geometry.coordinates[0][0]
+    }))
+  )
+})
+
 app.get('/api/advance', async (req, res) => {
   const { id } = req.query
 
