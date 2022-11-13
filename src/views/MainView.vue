@@ -6,17 +6,16 @@ import {
   NewGameData,
   RideShareData
 } from 'lib'
-import qs from 'qs'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
+import BusTimes from '../components/BusTimes.vue'
+import CurrentTime from '../components/CurrentTime.vue'
+import CurrentTotals from '../components/CurrentTotals.vue'
 import Estimates from '../components/Estimates.vue'
+import FareBudget from '../components/FareBudget.vue'
 import MapView from '../components/MapTwo.vue'
 import PendingDirection from '../components/PendingDirection.vue'
+import RoundNumber from '../components/RoundNumber.vue'
 import TheLoader from '../components/TheLoader.vue'
-import CurrentTotals from '../components/CurrentTotals.vue'
-import RoundNumber from "../components/RoundNumber.vue"
-import FareBudget from "../components/FareBudget.vue"
-import CurrentTime from "../components/CurrentTime.vue"
-import BusTimes from "../components/BusTimes.vue"
 
 const instruction = ref('Pick where to go next.')
 
@@ -30,12 +29,20 @@ const pendingMove = ref<undefined | Directions>(undefined)
 
 const rideShares = ref<RideShareData[]>([])
 const getRideShares = async (from: Coordinates, to: Coordinates) => {
-  const req = await fetch('/api/rideshares?' + qs.stringify({ from, to }))
+  const req = await fetch(
+    '/api/rideshares?from=' +
+      encodeURIComponent(JSON.stringify(from)) +
+      '&to=' +
+      encodeURIComponent(JSON.stringify(to))
+  )
   const json: RideShareData[] = await req.json()
   rideShares.value = json
 }
-// Get rideshares for the starting position
-getRideShares(game.from)
+watch(pendingMove, () => {
+  if (pendingMove.value) {
+    getRideShares(pendingMove.value.from, pendingMove.value.to)
+  }
+})
 
 const gnames = ref()
 const addDirection = () => {
@@ -105,12 +112,11 @@ const busAvalible = (directions: Directions) => {
     </div>
 
     <Estimates :money="10" :time="14" class="estimates" />
-    <CurrentTotals :tMoney=" 15" :tTime = "25" class="theTotals"/>
+    <CurrentTotals :tMoney="15" :tTime="25" class="theTotals" />
     <RoundNumber :round="1" class="roundNumber" />
     <FareBudget :fare="15" class="fareBudget" />
-    <CurrentTime :current= "new Date()" class="currentTime" />
-    <BusTimes :bus = "new Date()" class="busTimes" />
-    
+    <CurrentTime :current="new Date()" class="currentTime" />
+    <BusTimes :bus="new Date()" class="busTimes" />
   </div>
 </template>
 <style lang="scss">
@@ -131,23 +137,23 @@ const busAvalible = (directions: Directions) => {
   grid-row: 1/2;
   grid-column: 1/5;
 }
-.busTimes{
+.busTimes {
   grid-row: 2/5;
   grid-column: 4/6;
 }
-.roundNumber{
+.roundNumber {
   grid-row: 2/5;
   grid-column: 1/6;
 }
-.currentTime{
+.currentTime {
   grid-row: 2/5;
   grid-column: 2/6;
 }
-.fareBudget{
+.fareBudget {
   grid-row: 2/5;
   grid-column: 3/6;
 }
-.map{
+.map {
   grid-row: 3/4;
   grid-column: 1/3;
 }
