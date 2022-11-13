@@ -90,10 +90,7 @@ const featureSelected = (event: any) => {
               :coordinates="[a.location.lon, a.location.lat]"
             ></ol-geom-point>
             <ol-style>
-              <ol-style-icon
-                src="https://placebear.com/200/250"
-                :scale="0.03"
-              >
+              <ol-style-icon src="https://placebear.com/200/250" :scale="0.03">
               </ol-style-icon>
             </ol-style>
           </ol-feature>
@@ -131,6 +128,7 @@ const featureSelected = (event: any) => {
             <ol-style-icon
               src="https://upload.wikimedia.org/wikipedia/commons/d/db/Walk_icon.png"
               :scale="0.05"
+              scale="0.02"
             >
             </ol-style-icon>
           </ol-style>
