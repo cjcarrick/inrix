@@ -53,6 +53,14 @@ export default class Inrix {
       }
     )
 
+    console.log(req.url, req.status, req.statusText)
+    // If auth expired try again
+    if (req.status == 401) {
+      console.log('expired')
+      await this.auth()
+      return await this.fetcher(endpoint, params)
+    }
+
     const json = await req.json()
     return json
   }
