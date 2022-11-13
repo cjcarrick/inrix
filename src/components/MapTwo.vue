@@ -128,7 +128,6 @@ const featureSelected = (event: any) => {
             <ol-style-icon
               src="https://upload.wikimedia.org/wikipedia/commons/d/db/Walk_icon.png"
               :scale="0.05"
-              scale="0.02"
             >
             </ol-style-icon>
           </ol-style>
