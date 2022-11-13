@@ -7,6 +7,8 @@ const props = defineProps<{
   to: Coordinates
 }>()
 
+const emit = defineEmits(['setDestination'])
+
 // SF center
 const center = ref([-122.4418518, 37.7623168])
 const zoom = ref(12)
@@ -22,11 +24,13 @@ const selectCondition = selectConditions.click
 
 const featureSelected = event => {
   console.log(event)
+  emit('setDestination', event)
 }
 
-const selectInteactionFilter = (feature: { values_: { name: undefined } }) => {
-  return feature.values_.name != undefined
-}
+// const selectInteactionFilter = (feature: { values_: { name: undefined } }) => {
+//   console.log(feature)
+//   return feature.values_.name != undefined
+// }
 </script>
 
 <template>
@@ -50,7 +54,6 @@ const selectInteactionFilter = (feature: { values_: { name: undefined } }) => {
     <ol-interaction-select
       @select="featureSelected"
       :condition="selectCondition"
-      :filter="selectInteactionFilter"
     >
       <ol-style>
         <ol-style-stroke color="green" :width="10"></ol-style-stroke>
@@ -61,7 +64,6 @@ const selectInteactionFilter = (feature: { values_: { name: undefined } }) => {
         ></ol-style-icon>
       </ol-style>
     </ol-interaction-select>
-
 
     <!-- <ol-source-vector> -->
     <!--   <ol-feature> -->
@@ -93,12 +95,18 @@ const selectInteactionFilter = (feature: { values_: { name: undefined } }) => {
       <ol-source-vector>
         <ol-feature v-for="(a, i) in buses" :key="i">
           <ol-geom-point :coordinates="[a.lon, a.lat]"></ol-geom-point>
-          <ol-style>
-            <ol-style-circle :radius="10">
-              <ol-style-fill :color="'white'"></ol-style-fill>
-              <ol-style-stroke :color="'red'" :width="4"></ol-style-stroke>
-            </ol-style-circle>
-          </ol-style>
+          <ol-interaction-select
+            @select="featureSelected"
+            :condition="selectCondition"
+            :filter="selectInteactionFilter"
+          >
+            <ol-style>
+              <ol-style-circle :radius="10">
+                <ol-style-fill :color="'white'"></ol-style-fill>
+                <ol-style-stroke :color="'red'" :width="4"></ol-style-stroke>
+              </ol-style-circle>
+            </ol-style>
+          </ol-interaction-select>
         </ol-feature>
       </ol-source-vector>
     </ol-vector-layer>
