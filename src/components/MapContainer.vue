@@ -1,39 +1,85 @@
-<script setup lang="ts">
-import { BusData } from 'lib'
+<template>
+  <div ref="map-root" style="width: 100%; height: 100%"></div>
+</template>
+
+<script>
+import GeoJSON from 'ol/format/GeoJSON'
 import TileLayer from 'ol/layer/Tile'
+import VectorLayer from 'ol/layer/Vector'
 import Map from 'ol/Map'
 import OSM from 'ol/source/OSM'
+import VectorSource from 'ol/source/Vector'
 import View from 'ol/View'
-import { onMounted } from 'vue'
-// importing the OpenLayers stylesheet is required for having
-// good looking buttons!
+
 import 'ol/ol.css'
 
-const props = defineProps<{ buses: BusData[] }>()
-
-onMounted(() => {
-  const mapRoot = document.getElementById('map') as HTMLElement
-
-  new Map({
-    // the map will be created using the 'map-root' ref
-    target: mapRoot,
-    layers: [
-      // adding a background tiled layer
-      new TileLayer({
-        source: new OSM() // tiles are served by OpenStreetMap
+export default {
+  name: 'MapContainer',
+  components: {},
+  props: {
+    geojson: Object
+  },
+  data: () => ({
+    olMap: null,
+    vectorLayer: null,
+    selectedFeature: null
+  }),
+  mounted() {
+    this.vectorLayer = new VectorLayer({
+      source: new VectorSource({
+        features: []
       })
-    ],
-
-    // the map view will initially show the whole world
-    view: new View({
-      zoom: 4,
-      center: [0.5, 0],
-      constrainResolution: true
     })
-  })
-})
-</script>
 
-<template>
-  <div id="map" ref="mapRoot" style="width: 100%; height: 100%"></div>
-</template>
+    this.olMap = new Map({
+      target: this.$refs['map-root'],
+      layers: [
+        new TileLayer({
+          source: new OSM()
+        }),
+        this.vectorLayer
+      ],
+      view: new View({
+        zoom: 12,
+        center: [-13630000, 4545000],
+        constrainResolution: true
+      })
+    })
+
+    this.olMap.on('pointermove', event => {
+      const hovered = this.olMap.forEachFeatureAtPixel(
+        event.pixel,
+        feature => feature
+      )
+      if (hovered !== this.selectedFeature) {
+        this.$set(this, 'selectedFeature', hovered)
+      }
+    })
+
+    this.updateSource(this.geojson)
+  },
+  watch: {
+    geojson(value) {
+      this.updateSource(value)
+    },
+    selectedFeature(value) {
+      this.$emit('select', value)
+    }
+  },
+  methods: {
+    updateSource(geojson) {
+      const view = this.olMap.getView()
+      const source = this.vectorLayer.getSource()
+      geojson
+      const features = new GeoJSON({
+        featureProjection: 'EPSG:3857'
+      }).readFeatures(geojson)
+
+      source.clear()
+      source.addFeatures(features)
+
+      view.fit(source.getExtent())
+    }
+  }
+}
+</script>

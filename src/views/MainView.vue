@@ -4,6 +4,7 @@ import qs from 'qs'
 import { ref } from 'vue'
 import Estimates from '../components/Estimates.vue'
 import MapView from '../components/MapTwo.vue'
+// import MapView from '../components/MapContainer.vue'
 import TheLoader from '../components/TheLoader.vue'
 
 // TODO: Add buses to the map
@@ -50,14 +51,9 @@ const busAvalible = (directions: Directions) => {
         class="map"
         :buses="buses"
         :ride-shares="rideShares"
-        @addPoint="(lat: number, lon: number) => (pendingMove = {
-          type: 'walk',
-          from: {
-            lat: moves[moves.length - 1].to.lat,
-            lon: moves[moves.length -1].to.lon
-          },
-          to : { lat, lon }
-        })"
+        @addPoint="(lat: number, lon: number) => (pendingMove = { type: 'walk',
+      from: { lat: moves[moves.length - 1].to.lat, lon: moves[moves.length
+      -1].to.lon }, to : { lat, lon } })"
       />
     </TheLoader>
 
@@ -95,7 +91,7 @@ const busAvalible = (directions: Directions) => {
   width: 100vw;
   height: 100vh;
   grid-template-columns: 11em 20em 5em 10em auto;
-  grid-template-rows: 2em auto 10em;
+  grid-template-rows: 5em auto 10em;
   gap: 0.2rem;
 }
 
