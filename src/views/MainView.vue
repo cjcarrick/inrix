@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Directions, TransportTypes } from 'lib'
+import { Directions, TransportTypes, BusData } from 'lib'
 import { ref } from 'vue'
 import Estimates from '../components/Estimates.vue'
 import MapView from '../components/MapContainer.vue'
@@ -9,7 +9,7 @@ const pendingDirection = ref<undefined | Directions>(undefined)
 const steps = ref<{ directions: Directions; type: TransportTypes }[]>([])
 
 // TODO: Add buses to the map
-const buses: BusData = await (await fetch('/api/busStations')).json()
+const buses: BusData[] = await (await fetch('/api/busStations')).json()
 
 const games = ref()
 const addDirection = (type: TransportTypes) => {
@@ -44,7 +44,7 @@ const busAvalible = (directions: Directions) => {
       <MapView
         class="map"
         :buses="buses"
-        @addPoint="(lat: number, lon: number) => (pendingDirection = { lat, lon })"
+        @addPoint="(lat: number, lon: number) => (pendingDirection = {from: { lat: 0.0, lon: 0.0 }, to: {lat: 0, lon: 0}, type: 'walk'})"
       />
     </TheLoader>
 
