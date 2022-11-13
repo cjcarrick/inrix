@@ -1,5 +1,7 @@
-import { locations } from './locations'
-
+import { Coordinates } from '../lib'
+import { arr } from './locations'
+import { Location } from '../lib'
+ 
 export default class Game {
   from: Location
   to: Location
@@ -11,7 +13,7 @@ export default class Game {
   }
 
   private setLocations = () => {
-    this.from = locations[0]
-    this.to = locations[1]
+    this.from = arr[Math.floor(Math.random() * 100)]
+    this.to = arr[Math.floor(Math.random() * 100)]
   }
 }

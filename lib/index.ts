@@ -14,7 +14,7 @@ export type AllDirections = {
   drive: DriveDirections
 }
 
-export type Location = Coordinates & { name: string }
+export type Location = Coordinates;
 
 export type NewGameData = {
   from: Location
