@@ -5,10 +5,7 @@ import { Location } from '../lib'
 export default class Round {
   from: Location
   to: Location
-  id: number
-
   constructor() {
-    this.id = Math.floor(Math.random() * 1000)
     this.setLocations()
   }
 
