@@ -64,8 +64,6 @@ app.get('/api/rideshares', async (req, res) => {
     decodeURIComponent(to?.toString() || '{}')
   ) as Coordinates
 
-  console.log({ fromObj, toObj, from, to })
-
   if (!fromObj.lat || !fromObj.lon || !toObj.lat || !toObj.lon) {
     return res.sendStatus(400)
   }
@@ -76,13 +74,19 @@ app.get('/api/rideshares', async (req, res) => {
   const cost = 2 + 1 * parseFloat(route.totalDistance)
 
   for (let i = 0, len = Math.floor(8 * Math.random()); i < len; i++) {
+    const uberStart: Coordinates = {
+      lat: fromObj.lat - 0.001 + Math.random() / 0.002,
+      lon: fromObj.lon - 0.001 + Math.random() / 0.002
+    }
+
+    const uberArrival = (await inrix.findRoute(uberStart, fromObj)).result.trip
+      .routes[0]
+
     rides.push({
       cost,
-      timeToGetHere: route.travelTimeMinutes,
-      location: {
-        lat: fromObj.lat - 0.001 + Math.random() / 0.002,
-        lon: fromObj.lon - 0.001 + Math.random() / 0.002
-      }
+      timeToGetHere: uberArrival.travelTimeMinutes,
+      timeToGetThere: route.travelTimeMinutes,
+      location: uberStart
     })
   }
 

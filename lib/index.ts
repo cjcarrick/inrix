@@ -5,6 +5,7 @@ export type Coordinates = {
 
 export type RideShareData = {
   timeToGetHere: number
+  timeToGetThere: number
   cost: number
   location: Location
 }

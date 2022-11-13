@@ -6,8 +6,7 @@ import {
   NewGameData,
   RideShareData
 } from 'lib'
-import qs from 'qs'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import Estimates from '../components/Estimates.vue'
 import MapView from '../components/MapTwo.vue'
 import PendingDirection from '../components/PendingDirection.vue'
@@ -25,12 +24,26 @@ const pendingMove = ref<undefined | Directions>(undefined)
 
 const rideShares = ref<RideShareData[]>([])
 const getRideShares = async (from: Coordinates, to: Coordinates) => {
-  const req = await fetch('/api/rideshares?' + qs.stringify({ from, to }))
+  console.log({ from, to })
+  const req = await fetch(
+    '/api/rideshares?from=' +
+      encodeURIComponent(JSON.stringify(from)) +
+      '&to=' +
+      encodeURIComponent(JSON.stringify(from))
+  )
   const json: RideShareData[] = await req.json()
+  console.log('got ridesahres', { json })
   rideShares.value = json
 }
-// Get rideshares for the starting position
-getRideShares(game.from)
+
+// Update the uber drivers whenever the player picks a place to go
+watch(pendingMove, async () => {
+  if (!pendingMove.value) {
+    return
+  } else {
+    await getRideShares(pendingMove.value.from, pendingMove.value.to)
+  }
+})
 
 const gnames = ref()
 const addDirection = () => {
@@ -62,7 +75,6 @@ const busAvalible = (directions: Directions) => {
       <MapView
         class="map"
         :buses="buses"
-        :rideshares="rideshares"
         :from="game.from"
         :to="game.to"
         :ride-shares="rideShares"

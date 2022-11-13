@@ -33,8 +33,6 @@ export default class Inrix {
       token: json.result.token,
       expires: new Date(json.result.expiry)
     }
-
-    console.log('authenticated', this.bearer)
   }
 
   private fetcher = async (
