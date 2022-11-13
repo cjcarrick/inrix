@@ -1,18 +1,25 @@
 <script setup lang="ts">
+import { BusData } from 'lib'
 import { inject, ref } from 'vue'
 
-const center = ref([40, 40])
+const props = defineProps<{ buses: BusData[] }>()
+
+const center = ref([-122.4418518, 37.7623168])
 const projection = ref('EPSG:4326')
-const zoom = ref(8)
+const zoom = ref(12)
 const rotation = ref(0)
 
+const strokeColor = ref('red')
+const fillColor = ref('white')
 const format = inject('ol-format')
 
 const geoJson = new format.GeoJSON()
-
 const selectConditions = inject('ol-selectconditions')
-
 const selectCondition = selectConditions.click
+
+const colors: { [key: string]: { primary: string; secondary: string } }[] = [
+  { bus: { primary: 'blue', secondary: 'aqua' } }
+]
 
 const featureSelected = event => {
   console.log(event)
@@ -57,7 +64,24 @@ const selectInteactionFilter = feature => {
     </ol-interaction-select>
 
     <ol-vector-layer>
+      <ol-source-vector>
+        <ol-feature v-for="(a, i) in buses" :key="i">
+          <ol-geom-point :coordinates="[a.lon, a.lat]"></ol-geom-point>
 
+          <ol-style>
+            <ol-style-circle :radius="10">
+              <ol-style-fill :color="fillColor"></ol-style-fill>
+              <ol-style-stroke
+                :color="strokeColor"
+                :width="4"
+              ></ol-style-stroke>
+            </ol-style-circle>
+          </ol-style>
+        </ol-feature>
+      </ol-source-vector>
+    </ol-vector-layer>
+
+    <ol-vector-layer>
       <ol-source-vector
         ref="cities"
         url="https://raw.githubusercontent.com/alpers/Turkey-Maps-GeoJSON/master/tr-cities-airports.json"
@@ -73,7 +97,6 @@ const selectInteactionFilter = feature => {
           <ol-style-fill color="blue"></ol-style-fill>
         </ol-style-circle>
       </ol-style>
-
     </ol-vector-layer>
   </ol-map>
 </template>
