@@ -5,13 +5,11 @@ import Map from 'ol/Map'
 import OSM from 'ol/source/OSM'
 import View from 'ol/View'
 import { onMounted } from 'vue'
-
-const props = defineProps<{ buses: BusData }>()
-
-
 // importing the OpenLayers stylesheet is required for having
 // good looking buttons!
 import 'ol/ol.css'
+
+const props = defineProps<{ buses: BusData[] }>()
 
 onMounted(() => {
   const mapRoot = document.getElementById('map') as HTMLElement

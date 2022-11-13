@@ -84,7 +84,10 @@ app.get('/api/advance', async (req, res) => {
     return res.send(404)
   }
 
-  game.advance()
+  // Return the next round to the website
+  const round = game.advance()
+
+  // And also return how they did this time
 
   // TODO: app.use(express.json()) causes mix server to hang
   const directions = req.body as Directions[]
@@ -105,7 +108,7 @@ app.get('/api/advance', async (req, res) => {
     }
   }
 
-  return res.json(directions)
+  return res.json({ directions, round })
 })
 
 // Only serve index.html in production.

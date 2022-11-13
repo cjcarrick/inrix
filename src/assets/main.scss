@@ -49,6 +49,10 @@ button {
   background: transparent;
   border: 2px solid $color;
   cursor: pointer;
+
+  &:disabled {
+    opacity: 0.3;
+  }
 }
 
 button:focus,

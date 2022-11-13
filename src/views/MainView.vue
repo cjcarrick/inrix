@@ -1,25 +1,30 @@
 <script setup lang="ts">
-import { Directions, TransportTypes } from 'lib'
+import { BusData, Coordinates, Directions, RideShareData } from 'lib'
+import qs from 'qs'
 import { ref } from 'vue'
 import Estimates from '../components/Estimates.vue'
-import MapView from '../components/MapContainer.vue'
+import MapView from '../components/MapTwo.vue'
 import TheLoader from '../components/TheLoader.vue'
 
-const pendingDirection = ref<undefined | Directions>(undefined)
-const steps = ref<{ directions: Directions; type: TransportTypes }[]>([])
-
 // TODO: Add buses to the map
-const buses: BusData = await (await fetch('/api/busStations')).json()
+const buses: BusData[] = await (await fetch('/api/busStations')).json()
 
-const games = ref()
-const addDirection = (type: TransportTypes) => {
-  if (pendingDirection.value) {
-    steps.value.push({
-      type,
-      directions: pendingDirection.value
-    })
+const moves = ref<Directions[]>([])
+const pendingMove = ref<undefined | Directions>(undefined)
+
+const rideShares = ref<RideShareData[]>([])
+const getRideShares = async (from: Coordinates, to: Coordinates) => {
+  const req = await fetch('/api/rideshares?' + qs.stringify({ from, to }))
+  const json: RideShareData[] = await req.json()
+  rideShares.value = json
+}
+
+const gnames = ref()
+const addDirection = () => {
+  if (pendingMove.value) {
+    moves.value.push(pendingMove.value)
   } else {
-    console.warn('Pening direction is undefined')
+    console.warn('Pending direction is undefined')
   }
 }
 
@@ -44,20 +49,34 @@ const busAvalible = (directions: Directions) => {
       <MapView
         class="map"
         :buses="buses"
-        @addPoint="(lat: number, lon: number) => (pendingDirection = { lat, lon })"
+        :ride-shares="rideShares"
+        @addPoint="(lat: number, lon: number) => (pendingMove = {
+          type: 'walk',
+          from: {
+            lat: moves[moves.length - 1].to.lat,
+            lon: moves[moves.length -1].to.lon
+          },
+          to : { lat, lon }
+        })"
       />
     </TheLoader>
 
     <div class="navTypes">
-      <button :disabled="!!pendingDirection" @click="() => addDirection('bus')">
+      <button
+        :disabled="!!pendingMove"
+        @click="() => !!pendingMove && (pendingMove.type = 'drive')"
+      >
         Rideshare
       </button>
-      <button :disabled="!!pendingDirection" @click="() => addDirection('bus')">
+      <button
+        :disabled="!!pendingMove"
+        @click="() => !!pendingMove && (pendingMove.type = 'bus')"
+      >
         Bus
       </button>
       <button
-        :disabled="!!pendingDirection && busAvalible(pendingDirection)"
-        @click="() => addDirection('walk')"
+        :disabled="!!pendingMove && busAvalible(pendingMove)"
+        @click="() => !!pendingMove && (pendingMove.type = 'walk')"
       >
         Walk
       </button>
@@ -101,6 +120,10 @@ const busAvalible = (directions: Directions) => {
 .navTypes {
   grid-row: 3/4;
   grid-column: 2/3;
+}
+.estimates {
+  grid-row: 3/4;
+  grid-column: 3/4;
 }
 // an unscoped scss is required in App.vue for main.scss to properly load.
 // Components don't need this.

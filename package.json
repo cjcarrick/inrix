@@ -34,7 +34,8 @@
     "vite-backend-frontend-starter": "link:",
     "vite-plugin-mix": "^0.4.0",
     "vue": "^3.2.41",
-    "vue-router": "^4.1.6"
+    "vue-router": "^4.1.6",
+    "vue3-openlayers": "^0.1.70"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.42.1",
