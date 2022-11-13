@@ -36,7 +36,7 @@ app.get('/api/newRound', async (req, res) => {
   } as NewGameData
 })
 
-app.get('/api/endRound', async (req, res) => {
+app.get('/api/advance', async (req, res) => {
   const { id } = req.query
 
   const gameId = id?.toString()
@@ -48,6 +48,8 @@ app.get('/api/endRound', async (req, res) => {
   if (!game) {
     return res.send(404)
   }
+
+  game.advance()
 
   // TODO: app.use(express.json()) causes mix server to hang
   const directions = req.body as Directions[]
